@@ -2,25 +2,32 @@ import { Text, View, TextInput, Button, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { SignInScreenProps } from "../types/ScreenTypes";
 
+// Store
+import { useDispatch } from "react-redux";
+import { setUser } from "../store/userDataSlice";
+
 const SignIn = ({ navigation }: SignInScreenProps) => {
-  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const signIn = async () => {
-    if (!email || !password) {
+    setError("");
+    if (!username || !password) {
       setError("Please fill in the missing fields.");
       return;
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/user/signin", {
+      const response = await fetch("http://10.0.2.2:5000/api/user/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
+          username: username,
           password: password,
         }),
       });
@@ -35,10 +42,15 @@ const SignIn = ({ navigation }: SignInScreenProps) => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to sign in");
       }
+
+      const responseData = await response.json();
+      const token = responseData.accessToken;
+
+      dispatch(setUser({ username: username, accessToken: token }));
+      navigation.navigate("Home");
     } catch (error: any) {
       setError(error.message);
-    } finally {
-      navigation.navigate("Home");
+      console.log(error.message);
     }
   };
 
@@ -46,8 +58,8 @@ const SignIn = ({ navigation }: SignInScreenProps) => {
     <View className="flex-1 items-center justify-center">
       <Text>SignIn</Text>
       <TextInput
-        value={email}
-        onChangeText={setEmail}
+        value={username}
+        onChangeText={setUsername}
         placeholder="Email"
         className="border border-gray-300 rounded p-2 w-64"
       />

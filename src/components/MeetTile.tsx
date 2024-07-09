@@ -1,32 +1,33 @@
 import { TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-
-// Components
 import CustomText from "./CustomText";
-import GroupDetails from "../screens/GroupDetails";
 
-const GroupTile = ({
+const MeetTile = ({
+  meetId,
+  meetOpener,
+  status,
+  title,
   groupId,
-  name,
   navigation,
 }: {
+  meetId: number;
+  meetOpener: string;
+  status: string;
+  title: string;
   groupId: number;
-  name: string;
   navigation: any;
 }) => {
   return (
     <TouchableOpacity
       className="h-20 w-full mt-2 justify-center pl-2 border-2 rounded-lg border-black bg-white hover:bg-gray-500"
       onPress={() => {
-        navigation.navigate("GroupDetails", {
-          groupId: groupId,
-          groupName: name,
-        });
+        navigation.navigate("MeetDetails", { meetId: meetId, groupId: groupId});
       }}
     >
-      <CustomText className="font-bold">{name}</CustomText>
+      <CustomText>
+        {title} - {meetOpener}
+      </CustomText>
     </TouchableOpacity>
   );
 };
 
-export default GroupTile;
+export default MeetTile;

@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+// React
+import { useEffect } from "react";
 
 // Navigation
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,13 +13,33 @@ import { Provider } from "react-redux";
 import HomeScreen from "./src/screens/Home";
 import SignInScreen from "./src/screens/SignIn";
 import SignUpScreen from "./src/screens/SignUp";
+import GroupDetails from "./src/screens/GroupDetails";
 
 // Types
 import { RootStackParamList } from "./src/types/ScreenTypes";
 
+// Fonts
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const [loaded, error] = useFonts({
+    "Comic-Sans": require("./src/assets/fonts/ComicSansMS3.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -27,6 +47,17 @@ export default function App() {
           <Stack.Screen name="SignIn" component={SignInScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen}></Stack.Screen>
           <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="GroupDetails"
+            component={GroupDetails}
+            options={({ route }) => ({
+              headerShown: true,
+              title: route.params.groupName,
+              headerTitleStyle: {
+                fontFamily: 'Comic-Sans', // Replace 'YourCustomFontFamily' with your actual font family
+              },
+            })}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -1,37 +1,58 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { useState, useEffect } from "react";
+import { HomeScreenProps } from "../types/ScreenTypes";
 
 // Components
 import GroupTile from "../components/GroupTile";
+import CustomText from "../components/CustomText";
 
-export default function Home() {
-  const [groups, setGroups] = useState([]);
+// Store
+import { useSelector } from "react-redux";
+
+// StateTypes
+import { RootState } from "../types/StateTypes";
+
+type Group = {
+  group_id: number;
+  name: string;
+};
+
+export default function Home({ navigation }: HomeScreenProps) {
+  // Accessing user's data
+  const userData = useSelector((state: RootState) => state.user);
+
+  const [groups, setGroups] = useState<Group[]>([]);
 
   useEffect(() => {
-    const fetchData = async (retryCount = 0) => {
-      try {
-        const response = await fetch("http://127.0.0.1:5000/api/user/signup", {
-          method: "GET",
-        });
-        const groups = await response.json();
-        setGroups(groups);
-      } catch (error) {
-        if (retryCount < 3) {
-          console.error("Retry fetch groups");
-          fetchData(retryCount + 1);
-        } else {
-          console.error("Failed to fetch data");
+    fetch("http://10.0.2.2:5000/api/group/get_all_groups", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + userData.accessToken,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-      }
-    };
-
-    fetchData();
+        return response.json();
+      })
+      .then((groupsData) => setGroups(groupsData))
+      .catch((error) => {
+        console.error("Failed to fetch groups:", error);
+      });
   }, []);
 
   return (
     <View className="pt-8 px-4">
-      <Text>Hello Bob,</Text>
-      <GroupTile />
+      <CustomText>Hello Bob,</CustomText>
+      {groups.map((group, index) => (
+        <GroupTile
+          key={index}
+          groupId={group.group_id}
+          name={group.name}
+          navigation={navigation}
+        />
+      ))}
     </View>
   );
 }

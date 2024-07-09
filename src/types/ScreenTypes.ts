@@ -4,12 +4,23 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   Home: undefined;
-  Group: { id: string };
+  GroupDetails: { groupId: number; groupName: string };
+  MeetDetails: { meetId: number; groupId: number };
 };
 
 export type HomeScreenProps = NativeStackScreenProps<
   RootStackParamList,
   "Home"
+>;
+
+export type GroupDetailsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "GroupDetails"
+>;
+
+export type MeetDetailsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  "MeetDetails"
 >;
 
 export type SignInScreenProps = NativeStackScreenProps<
