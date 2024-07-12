@@ -7,13 +7,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Redux
 import store from "./src/store/store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 
 // Screens
 import HomeScreen from "./src/screens/Home";
 import SignInScreen from "./src/screens/SignIn";
 import SignUpScreen from "./src/screens/SignUp";
-import GroupDetails from "./src/screens/GroupDetails";
+import GroupDetails from "./src/screens/group/GroupDetails";
+import MeetDetails from "./src/screens/MeetDetails";
 
 // Types
 import { RootStackParamList } from "./src/types/ScreenTypes";
@@ -22,10 +23,12 @@ import { RootStackParamList } from "./src/types/ScreenTypes";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+
   const [loaded, error] = useFonts({
     "Comic-Sans": require("./src/assets/fonts/ComicSansMS3.ttf"),
   });
@@ -54,7 +57,19 @@ export default function App() {
               headerShown: true,
               title: route.params.groupName,
               headerTitleStyle: {
-                fontFamily: 'Comic-Sans', // Replace 'YourCustomFontFamily' with your actual font family
+                fontFamily: "Comic-Sans",
+              },
+              
+            })}
+          />
+          <Stack.Screen
+            name="MeetDetails"
+            component={MeetDetails}
+            options={({ route }) => ({
+              headerShown: true,
+              title: route.params.meetName,
+              headerTitleStyle: {
+                fontFamily: "Comic-Sans",
               },
             })}
           />

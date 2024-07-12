@@ -1,9 +1,7 @@
 import { TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 // Components
 import CustomText from "./CustomText";
-import GroupDetails from "../screens/GroupDetails";
 
 const GroupTile = ({
   groupId,

@@ -5,7 +5,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   Home: undefined;
   GroupDetails: { groupId: number; groupName: string };
-  MeetDetails: { meetId: number; groupId: number };
+  MeetDetails: { meetId: number; groupId: number; meetName: string };
 };
 
 export type HomeScreenProps = NativeStackScreenProps<

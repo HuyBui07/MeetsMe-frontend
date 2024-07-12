@@ -2,9 +2,11 @@ import { configureStore } from '@reduxjs/toolkit'
 
 // Reducers
 import userReducer from "./userDataSlice"
+import groupMemberModalReducer from "./groupMemberModalSlice"
 
 export default configureStore({
   reducer: {
-    user: userReducer
+    user: userReducer,
+    groupMemberModal: groupMemberModalReducer
   }
 })
