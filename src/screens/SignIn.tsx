@@ -1,10 +1,14 @@
-import { Text, View, TextInput, Button, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { SignInScreenProps } from "../types/ScreenTypes";
 
 // Store
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userDataSlice";
+
+// Components
+import { View, TextInput, TouchableOpacity } from "react-native";
+import CustomText from "../components/CustomText";
+import CustomButton from "../components/CustomButton";
 
 const SignIn = ({ navigation }: SignInScreenProps) => {
   const dispatch = useDispatch();
@@ -55,30 +59,46 @@ const SignIn = ({ navigation }: SignInScreenProps) => {
   };
 
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text>SignIn</Text>
+    <View className="flex-1 items-center justify-center px-12">
+      <View className="w-full mb-5">
+        <CustomText className="text-2xl">Sign In</CustomText>
+      </View>
+
+      <View className="w-full mb-2">
+        <CustomText>Username</CustomText>
+      </View>
       <TextInput
         value={username}
         onChangeText={setUsername}
-        placeholder="Email"
-        className="border border-gray-300 rounded p-2 w-64"
+        placeholder="Username"
+        className="border border-gray-300 rounded p-2 w-full mb-4"
+        style={{ fontFamily: "Comic-Sans" }}
       />
 
-      <Text>Password</Text>
+      <View className="w-full mb-2">
+        <CustomText>Password</CustomText>
+      </View>
       <TextInput
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
         secureTextEntry={true}
-        className="border border-gray-300 rounded p-2 w-64"
+        className="border border-gray-300 rounded p-2 w-full mb-5"
+        style={{ fontFamily: "Comic-Sans" }}
       />
 
-      {error && <Text className="text-red-500">{error}</Text>}
+      {error && (
+        <View className="w-full mb-5">
+          <CustomText className="text-red-500">{error}</CustomText>
+        </View>
+      )}
+      <CustomButton title="Sign in" onPress={signIn} />
 
-      <Button title="Sign in" onPress={signIn} />
-
-      <TouchableOpacity onPress={signIn}>
-        <Text>Click here to sign up</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("SignUp")}
+        className="mt-20"
+      >
+        <CustomText>Click here to sign up</CustomText>
       </TouchableOpacity>
     </View>
   );

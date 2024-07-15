@@ -1,27 +1,36 @@
-import { Text, View, TextInput, Button, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import { SignUpScreenProps } from "../types/ScreenTypes";
 
+// Components
+import { View, TextInput, Button, TouchableOpacity } from "react-native";
+import CustomText from "../components/CustomText";
+import CustomButton from "../components/CustomButton";
+
 const SignUp = ({ navigation }: SignUpScreenProps) => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   const signUp = async () => {
-    if (!email || !password || !confirmPassword) {
+    if (!username || !password || !confirmPassword) {
       setError("Please fill in the missing fields.");
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/user/signup", {
+      const response = await fetch("http://10.0.2.2:5000/api/user/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
+          username: username,
           password: password,
         }),
       });
@@ -36,45 +45,67 @@ const SignUp = ({ navigation }: SignUpScreenProps) => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to sign up");
       }
+
+      navigation.replace("Home");
     } catch (error: any) {
       setError(error.message);
-    } finally {
-      navigation.navigate("Home");
     }
   };
 
   return (
-    <View className="flex-1 items-center justify-center">
-      <Text>SignIn</Text>
+    <View className="flex-1 items-center justify-center px-12">
+      <View className="w-full mb-10">
+        <CustomText className="text-2xl">Sign Up</CustomText>
+      </View>
+
+      <View className="w-full mb-2">
+        <CustomText>Username</CustomText>
+      </View>
       <TextInput
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        className="border border-gray-300 rounded p-2 w-64"
+        value={username}
+        onChangeText={setUsername}
+        placeholder="Username"
+        className="border border-gray-300 rounded p-2 w-full mb-4"
+        style={{ fontFamily: "Comic-Sans" }}
       />
 
-      <Text>Password</Text>
+      <View className="w-full mb-2">
+        <CustomText>Password</CustomText>
+      </View>
       <TextInput
         value={password}
         onChangeText={setPassword}
         placeholder="Password"
-        className="border border-gray-300 rounded p-2 w-64"
+        secureTextEntry={true}
+        className="border border-gray-300 rounded p-2 w-full mb-4"
+        style={{ fontFamily: "Comic-Sans" }}
       />
 
-      <Text>Confirm Password</Text>
+      <View className="w-full mb-2">
+        <CustomText>Confirm Password</CustomText>
+      </View>
       <TextInput
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         placeholder="Confirm Password"
-        className="border border-gray-300 rounded p-2 w-64"
+        secureTextEntry={true}
+        className="border border-gray-300 rounded p-2 w-full mb-5"
+        style={{ fontFamily: "Comic-Sans" }}
       />
 
-      {error && <Text className="text-red-500">{error}</Text>}
+      {error && (
+        <View className="w-full mb-5">
+          <CustomText className="text-red-500">{error}</CustomText>
+        </View>
+      )}
 
-      <Button title="Sign in" onPress={signUp} />
+      <CustomButton title="Sign Up" onPress={signUp}/>
 
-      <TouchableOpacity onPress={signUp}>
-        <Text>Click here to sign in</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("SignIn")}
+        className="mt-20"
+      >
+        <CustomText>Click here to sign in</CustomText>
       </TouchableOpacity>
     </View>
   );
