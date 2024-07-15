@@ -14,7 +14,7 @@ const GroupTile = ({
 }) => {
   return (
     <TouchableOpacity
-      className="h-20 w-full mt-2 justify-center pl-2 border-2 rounded-lg border-black bg-white hover:bg-gray-500"
+      className="h-20 w-full mt-2 justify-center pl-2 border-2 rounded-lg border-black bg-white"
       onPress={() => {
         navigation.navigate("GroupDetails", {
           groupId: groupId,

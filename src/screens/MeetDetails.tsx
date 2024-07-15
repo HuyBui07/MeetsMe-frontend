@@ -28,6 +28,7 @@ const MeetDetails = ({ route }: MeetDetailsScreenProps) => {
 
   const [meetDetails, setMeetDetails] = useState<MeetDetails>();
   const [attendees, setAttendees] = useState<string[]>([]);
+  const [refresh, setRefresh] = useState(false);
 
   const meetId = route.params.meetId;
   const groupId = route.params.groupId;
@@ -64,18 +65,29 @@ const MeetDetails = ({ route }: MeetDetailsScreenProps) => {
       .catch((error) => {
         console.error("Failed to fetch attendees:", error);
       });
-  }, []);
+  }, [refresh]);
 
   const meetAccept = async () => {
-    const response = await fetch("http://10.0.2.2:5000/api/meet/accept", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + userData.accessToken,
-      },
-    });
+    try {
+      const response = await fetch("http://10.0.2.2:5000/api/meet/accept", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + userData.accessToken,
+        },
+        body: JSON.stringify({
+          meet_id: meetId,
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+      if (!response.ok) {
+        const errorData = await response.text(); // or response.json() if the server sends JSON
+        throw new Error(`Network response was not ok: ${errorData}`);
+      }
+
+      setRefresh(!refresh);
+    } catch (error) {
+      console.error("Failed to accept meet:", error);
     }
   };
 

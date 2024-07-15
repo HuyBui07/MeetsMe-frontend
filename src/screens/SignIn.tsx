@@ -47,7 +47,7 @@ const SignIn = ({ navigation }: SignInScreenProps) => {
       const token = responseData.accessToken;
 
       dispatch(setUser({ username: username, accessToken: token }));
-      navigation.navigate("Home");
+      navigation.replace("Home");
     } catch (error: any) {
       setError(error.message);
       console.log(error.message);

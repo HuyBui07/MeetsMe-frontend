@@ -10,7 +10,7 @@ import store from "./src/store/store";
 import { Provider, useSelector } from "react-redux";
 
 // Screens
-import HomeScreen from "./src/screens/Home";
+import HomeScreen from "./src/screens/home/Home";
 import SignInScreen from "./src/screens/SignIn";
 import SignUpScreen from "./src/screens/SignUp";
 import GroupDetails from "./src/screens/group/GroupDetails";
@@ -23,12 +23,10 @@ import { RootStackParamList } from "./src/types/ScreenTypes";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-
   const [loaded, error] = useFonts({
     "Comic-Sans": require("./src/assets/fonts/ComicSansMS3.ttf"),
   });
@@ -49,7 +47,11 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="SignIn" component={SignInScreen} />
           <Stack.Screen name="SignUp" component={SignUpScreen}></Stack.Screen>
-          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: true, headerTitleAlign: "center"}}
+          />
           <Stack.Screen
             name="GroupDetails"
             component={GroupDetails}
@@ -59,7 +61,6 @@ export default function App() {
               headerTitleStyle: {
                 fontFamily: "Comic-Sans",
               },
-              
             })}
           />
           <Stack.Screen

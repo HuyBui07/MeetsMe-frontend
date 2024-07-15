@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 // StateTypes
 import { Member, RootState } from "../../types/StateTypes";
-import { openModal, setMembers } from "../../store/groupMemberModalSlice";
+import { openModal, setSelectedGroup } from "../../store/groupMemberModalSlice";
 
 type Meet = {
   id: number;
@@ -78,7 +78,14 @@ const GroupDetails = ({ route, navigation }: GroupDetailsScreenProps) => {
         }
         return response.json();
       })
-      .then((meetsData) => dispatch(setMembers(meetsData as Member[])))
+      .then((meetsData) =>
+        dispatch(
+          setSelectedGroup({
+            group_id: groupId,
+            members: meetsData as Member[],
+          })
+        )
+      )
       .catch((error) => {
         console.error("Failed to fetch members:", error);
       });
